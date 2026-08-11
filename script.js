@@ -25,3 +25,50 @@ carouselButtons.forEach((button) => {
     speakerCarousel.scrollBy({ left: distance * direction, behavior: "smooth" });
   });
 });
+
+const checkoutDialog = document.querySelector("#checkout-dialog");
+const checkoutForm = document.querySelector("#checkout-form");
+const checkoutTriggers = document.querySelectorAll("[data-checkout-trigger]");
+const dialogClose = document.querySelector("[data-dialog-close]");
+const formStatus = document.querySelector("#form-status");
+
+checkoutTriggers.forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    formStatus.textContent = "";
+    checkoutDialog.showModal();
+  });
+});
+
+dialogClose.addEventListener("click", () => checkoutDialog.close());
+
+checkoutDialog.addEventListener("click", (event) => {
+  if (event.target === checkoutDialog) checkoutDialog.close();
+});
+
+checkoutForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!checkoutForm.reportValidity()) return;
+
+  const submitButton = checkoutForm.querySelector("[type='submit']");
+  const originalLabel = submitButton.innerHTML;
+  submitButton.disabled = true;
+  submitButton.textContent = "Enviando seus dados…";
+  formStatus.textContent = "";
+
+  try {
+    const response = await fetch(checkoutForm.dataset.endpoint, {
+      method: "POST",
+      body: new FormData(checkoutForm),
+      headers: { Accept: "application/json" },
+    });
+
+    if (!response.ok) throw new Error("Não foi possível enviar o formulário.");
+
+    window.location.assign(checkoutForm.dataset.checkout);
+  } catch (error) {
+    formStatus.textContent = "Não conseguimos enviar agora. Verifique sua conexão e tente novamente.";
+    submitButton.disabled = false;
+    submitButton.innerHTML = originalLabel;
+  }
+});
