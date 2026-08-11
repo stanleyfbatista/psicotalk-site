@@ -57,9 +57,17 @@ checkoutForm.addEventListener("submit", async (event) => {
   formStatus.textContent = "";
 
   try {
+    const formData = new FormData(checkoutForm);
+
+    await fetch(checkoutForm.dataset.sheets, {
+      method: "POST",
+      body: formData,
+      mode: "no-cors",
+    });
+
     const response = await fetch(checkoutForm.dataset.endpoint, {
       method: "POST",
-      body: new FormData(checkoutForm),
+      body: formData,
       headers: { Accept: "application/json" },
     });
 
