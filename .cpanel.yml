@@ -6,4 +6,7 @@ deployment:
     - /bin/cp styles.css $DEPLOYPATH
     - /bin/cp script.js $DEPLOYPATH
     - /bin/cp .htaccess $DEPLOYPATH
+    - /bin/cp robots.txt $DEPLOYPATH
+    - /bin/cp sitemap.xml $DEPLOYPATH
+    - /bin/cp llms.txt $DEPLOYPATH
     - /bin/cp -R assets $DEPLOYPATH
